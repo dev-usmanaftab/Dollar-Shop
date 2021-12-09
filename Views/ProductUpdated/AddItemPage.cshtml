@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Add Products";
+}
+
+<h1>Add Product Page </h1>
+<br>
+
+@{
+    <form action="https://www.google.com/">
+        <label for="name">Name</label><br>
+        <input type="text" id="name" name="name" placeholder="Shirt..."><br>
+        <label for="price">Price</label><br>
+        <input type="text" id="price" name="price" placeholder="Price..."><br>
+        <label for="Image">Image Link</label><br>
+        <input type="text" id="image" name="image" placeholder="https://bit.ly/3p2dugr"><br>
+        <label for="catagory">Choose A Catagory</label><br>
+        <select id="selectedCatagory" name="selectedCatagory" class="custom-select">
+            <option value="Men">Men</option>
+            <option value="Women">Women</option>
+            <option value="Children">Children</option>
+        </select><br>
+        <input type="submit" value="Add Item" id="btnAdd">
+    </form>
+}
+
+<p id="result"> </p>
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+            $("#btnAdd").click(function (event) {
+                event.preventDefault();
+                var name =  $("#name").val();
+                var price = $("#price").val();
+                var image = $("#image").val();
+                var catagory = $("#selectedCatagory").val();
+
+                data = {
+                    Name: name,
+                    Price: price,
+                    Image: image,
+                    Catagory: catagory
+                };
+
+                $.ajax({
+                    url: "/ProductUpdated/AddItem",
+                    type: "post",
+                    data: data,
+                    success: function (result) {
+                        $("#result").html(`${result.message}`);
+                    }
+                });
+            });
+        });
+    </script>
+}

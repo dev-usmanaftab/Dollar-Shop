@@ -1,0 +1,74 @@
+﻿@model List<ProductsModelUpdated>;
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1>Please check our New products</h1><br>
+
+<form action="https://www.google.com/">
+    <label for="name">Search By Name</label><br>
+    <input type="text" id="name" name="name" placeholder="Shirt..."><br>
+    <label for="price">Search By Price</label><br>
+    <input type="text" id="minprice" name="minprice" placeholder="Min Price...">
+    <input type="text" id="maxprice" name="maxprice" placeholder="Max Price..."><br>
+    <label for="catagory">Search By Catagory</label><br>
+    <select id="selectedCatagory" name="selectedCatagory" class="custom-select">
+        <option value="All">ALL</option>
+        <option value="Men">Men</option>
+        <option value="Women">Women</option>
+        <option value="Children">Children</option>
+    </select><br>
+    <input type="submit" value="Search" id="btnSearch">
+</form>
+
+<br><br>
+
+<div id="filteredProducts">
+    @{
+        for (int i = 0; i < Model.Count; i++)
+        {
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="@Model[i].Image" alt="MenShirt" height="300">
+                <div class="card-body">
+                    <h5 class="card-title">@Model[i].Name</h5>
+                    <p class="card-text">Price: @Model[i].Price</p>
+                    <p class="card-text">Catagory: @Model[i].Catagory</p>
+                    <a href="#" class="btn btn-primary">Add To Cart</a>
+                </div>
+            </div>
+            <br><br>
+        }
+    }
+
+</div>
+
+@section scripts {
+    
+    <script>
+        $(document).ready(function () {
+            $("#btnSearch").click(function (event) {
+                event.preventDefault();
+                var name = $("#name").val();
+                var minprice = $("#minprice").val();
+                var maxprice = $("#maxprice").val();
+                var catagory = $("#selectedCatagory").val();
+
+                data = {
+                            Name: name,
+                            Minprice: minprice,
+                            Maxprice: maxprice,
+                            Catagory: catagory
+                };
+
+                $.ajax({
+                    url: "/ProductUpdated/Search",
+                    data: data,
+                    success: function (result) {
+                        $("#filteredProducts").html(result);
+                    }
+                });
+            });
+        });
+    </script>
+}

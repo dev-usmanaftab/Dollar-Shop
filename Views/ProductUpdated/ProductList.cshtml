@@ -1,0 +1,17 @@
+﻿@model List<ProductsModelUpdated>;
+
+@{
+    for (int i = 0; i < Model.Count; i++)
+    {
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="@Model[i].Image" alt="MenShirt" height="300">
+            <div class="card-body">
+                <h5 class="card-title">@Model[i].Name</h5>
+                <p class="card-text">Price: @Model[i].Price</p>
+                <p class="card-text">Catagory: @Model[i].Catagory</p>
+                <a href="#" class="btn btn-primary">Add To Cart</a>
+            </div>
+        </div>
+        <br><br>
+    }
+}

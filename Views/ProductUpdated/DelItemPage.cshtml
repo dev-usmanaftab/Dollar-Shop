@@ -1,0 +1,65 @@
+﻿@model ProductsModelUpdated;
+
+@{
+    ViewData["Title"] = "Delete Item";
+}
+
+<h1>Delete Product </h1>
+<br>
+
+@{
+    if (@Model == null)
+    {
+        <p>Product Not Exists</p>
+    }
+
+    if (@Model != null)
+    {
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="@Model.Image" alt="product" height="300">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Name</h5>
+                <p class="card-text">Price: @Model.Price</p>
+                <p class="card-text">Catagory: @Model.Catagory</p>
+                <a href="#" id="btnDel" class="btn btn-primary">Delete</a>
+            </div>
+        </div>
+        <br>
+    }
+
+    <p id="result"> </p>
+
+}
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+            $("#btnDel").click(function (event) {
+                event.preventDefault();
+                var name      = "@Model.Name";
+                var price     = "@Model.Price";
+                var image     = "@Model.Image";
+                var catagory  = "@Model.Catagory";
+                var productID = "@Model.ProductID";
+
+                var Data =  {
+                                Name: name,
+                                Price: price,
+                                Image: image,
+                                ProductID: productID,
+                                Catagory: catagory
+                            };
+
+                $.ajax({
+                    url: "/ProductUpdated/DelItem",
+                    data: Data,
+                    type:"delete",
+                    success: function (result) {
+                        $("#result").html(`${result.message}`);
+                    }
+                });
+            });
+        });
+    </script>
+}

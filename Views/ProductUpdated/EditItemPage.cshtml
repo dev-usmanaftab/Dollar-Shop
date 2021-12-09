@@ -1,0 +1,63 @@
+﻿@using DollarShop.Models.Enums;
+@model ProductsModelUpdated;
+@{
+    ViewData["Title"] = "Edit Item";
+}
+
+<h1>Edit The Product Page </h1>
+<br>
+
+@{
+    if (@Model == null)
+    {
+        <p>Product Not Exists</p>
+    }
+
+    if (@Model != null)
+    {
+        <form action="https://www.google.com">
+            <label for="name">Name</label><br>
+            <input type="text" id="name" name="name" value="@Model.Name"><br>
+            <label for="price">Price</label><br>
+            <input type="text" id="price" name="price" value="@Model.Price"><br>
+            <label for="Image">Image Link</label><br>
+            <input type="text" id="image" name="image" value="@Model.Image"><br>
+            <label for="catagory">Choose A Catagory</label><br>
+            <select id="selectedCatagory" name="selectedCatagory" class="custom-select" asp-items="@Html.GetEnumSelectList<CatagoryType>()">
+            </select><br>
+            <input type="submit" value="Edit Item" id="btnEdit">
+        </form>
+    }
+
+    <p id="result"> </p>
+
+}
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#selectedCatagory').prop('selectedIndex', @((int)Model.Catagory));
+            $("#btnEdit").click(function (event) {
+                event.preventDefault();
+                var Data =
+                {
+                    Name:       $("#name").val(),
+                    Price:      $("#price").val(),
+                    Image:      $("#image").val(),
+                    Catagory:   $("#selectedCatagory").val(),
+                    ProductID:  "@Model.ProductID"
+                };
+
+                $.ajax({
+                    url: "/ProductUpdated/EditItem",
+                    type: "post",
+                    data: Data,
+                    success: function (result) {
+                        $("#result").html(`${result.message}`);
+                    }
+                });
+            });
+        });
+    </script>
+}

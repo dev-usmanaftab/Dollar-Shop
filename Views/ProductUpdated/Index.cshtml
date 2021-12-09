@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "The Dollor Shop";
+}
+
+<h1>jQuery Practice</h1>
+<h1>Sign In</h1>
+
+<form action="https://www.google.com/">
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" value=""><br>
+
+    <label for="password">Password:</label><br>
+    <input type="text" id="password" name="password" value=""><br>
+
+    <label for="btnResponse" id="btnResponse" style="font-size:smaller"> </label><br>
+    <input id="btnSubmit" class="btnSubmit" type="submit" value="Login">
+</form>
+<br>
+
+<h1 id="first">This is H1 heading.......</h1>
+<h2>This is H2 heading.......</h2>
+<p id="html">Click Me to change my content........ </p>   
+<button id="append">Append Demo</button>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+            $("#first").on("click", function () {
+                $("#first").hide();
+            });
+
+            $("h2").on({
+                mouseenter: function () {
+                    $(this).css("background-color", "lightgray");
+                },
+                mouseleave: function () {
+                    $(this).css("background-color", "lightblue");
+                },
+                click: function () {
+                    $(this).css("background-color", "yellow");
+                }
+            });
+
+            $("#btnSubmit").click(function (event) {
+                event.preventDefault();
+
+                var mydata = {
+                    username: $("#username").val(),
+                    password: $("#password").val(),
+                };
+
+                $.ajax({
+                    url: "/Home/AjaxDemo",
+                    data: mydata,
+                    success: function (result) {
+
+                        if (result.isSuccess) {
+                            $("#btnResponse").css("color", "green");
+                            $("#btnResponse").html("Login Success!!!");
+                        }
+
+                        if (!result.isSuccess) {
+                            $("#btnResponse").css("color", "red");
+                            $("#btnResponse").html("Login Failed...");
+                        }
+                    }
+                });
+            });
+
+            $("#html").click(function () {
+                $("#html").html("Hurray, I Am Changed....!!!");
+            });
+
+            $("#append").click(function () {
+                var txt1 = "<p>I am created in Razor by using \"HTML Technique\" </p>";
+                var txt2 = $("<p></p>").text("I am created in Razor by using \"jQuery Technique\" ");
+                var txt3 = document.createElement("p");
+                txt3.innerHTML = "I am created in Razor by using \"DOM method\" ";
+                $("body").append(txt1, txt2, txt3);
+                
+            });
+        });
+    </script>
+}
+
+@*/////////////////////////////////////////////////////////////////////////////////////////
+        <script>
+            $(document).ready(function () {
+
+               function alertName(ev)
+                {
+                    ev.preventDefault();
+                    var name = $("#fname").val() +" " + $("#lname").val();
+                    alert(name);
+                }
+
+                $("#btnSubmit").click(alertName);
+
+            });
+
+        </script>
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+              function add(a, b, callback) {
+                  console.log("Start of my callback")
+                  console.log(callback);
+                  console.log("Start of my callback")
+
+                  console.log("I am inside add method()")
+                  var sum = a + b;
+                  callback(sum);
+              }
+              function a(msg) {
+                  console.log("I am inside displayOnConsole method()")
+                  console.log(msg);
+              }
+
+              add(2, 3, a);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+            var result = $(".btnSubmit"); // returns JQuery object
+            console.log("Length of selectors are: " + result.length);
+            console.log(result);
+
+            result.click(function (event) {
+            event.preventDefault();
+            var fullname = $("#fname").val() + " " + $("#lname").val();
+            alert(fullname);
+            });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////*@
