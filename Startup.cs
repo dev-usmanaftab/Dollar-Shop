@@ -1,9 +1,11 @@
 using DollarShop.Controllers;
+using DollarShop.DB;
 using DollarShop.Factories;
 using DollarShop.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +30,9 @@ namespace DollarShop
         {
             services.AddControllersWithViews();
             services.AddSingleton<IProductRepository, ProductRepository>();
+            services.AddDbContext<DollarShopContext>(
+                options => options.UseSqlServer(
+                    Configuration.GetConnectionString("DollarShopConnectionString")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

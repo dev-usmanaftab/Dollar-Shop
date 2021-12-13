@@ -1,4 +1,5 @@
-﻿using DollarShop.Factories;
+﻿using DollarShop.DB;
+using DollarShop.Factories;
 using DollarShop.Interfaces;
 using DollarShop.Models;
 using DollarShop.Models.DTOs.Product;
@@ -16,14 +17,16 @@ namespace DollarShop.Controllers
     public class ProductUpdatedController : Controller
     {
         IProductRepository _repo;
-        
-        public ProductUpdatedController(IProductRepository repo)
+        public DollarShopContext _context { get; set; }
+        public ProductUpdatedController(IProductRepository repo, DollarShopContext context)
         {
             _repo = repo;
+            _context = context;
         }
 
         public IActionResult Index()
         {
+            
             return View();
         }
         
@@ -82,6 +85,34 @@ namespace DollarShop.Controllers
 
         public IActionResult ProductsFromJson()
         {
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            _context.Database.EnsureCreated();
+            
+            var products1 = _context.Products.ToList(); // To get all products
+
+
+            ProductsModelUpdated Men = new ProductsModelUpdated();
+            Men.Name = "Jacket Blue_dark";
+            Men.Price = 250;
+            Men.Catagory = CatagoryType.Men;
+            Men.Image = "https://bit.ly/3csfAjt";
+
+
+            _context.Products.Add(Men); // Add a product 
+            _context.SaveChanges(); // Save data in database
+            
+            var products2 = _context.Products.ToList(); // To get all products
+            products2.First().Name = "Jacket Blue Dark";
+            _context.SaveChanges(); // Update data in database
+
+            var products3 = _context.Products.ToList(); // To get all products
+            
+            _context.Products.Remove(Men);
+            _context.SaveChanges(); // Update data in database
+            
+            var products4 = _context.Products.ToList(); // To get all products
+
+            ///////////////////////////////////////////////////////////////////////////////////////////
             var products = _repo.GetProducts();
             return View(products);
         }
