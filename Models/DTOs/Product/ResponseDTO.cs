@@ -8,6 +8,7 @@ namespace DollarShop.Models.DTOs.Product
     public class ResponseDTO
     {
         public List<ProductsModelUpdated> Products { get; set; }
+        
         public ResponseDTO(List<ProductsModelUpdated> p)
         {
             Products = p;

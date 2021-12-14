@@ -4,6 +4,7 @@ using DollarShop.Interfaces;
 using DollarShop.Models;
 using DollarShop.Models.DTOs.Product;
 using DollarShop.Models.Enums;
+using DollarShop.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,11 +18,9 @@ namespace DollarShop.Controllers
     public class ProductUpdatedController : Controller
     {
         IProductRepository _repo;
-        public DollarShopContext _context { get; set; }
-        public ProductUpdatedController(IProductRepository repo, DollarShopContext context)
+        public ProductUpdatedController(IProductRepository repo)
         {
             _repo = repo;
-            _context = context;
         }
 
         public IActionResult Index()
@@ -80,39 +79,11 @@ namespace DollarShop.Controllers
         public IActionResult Products()
         {
             var products = _repo.GetProducts();
-            return View( products );
+            return View(products);
         }
 
         public IActionResult ProductsFromJson()
         {
-            ///////////////////////////////////////////////////////////////////////////////////////////
-            _context.Database.EnsureCreated();
-            
-            var products1 = _context.Products.ToList(); // To get all products
-
-
-            ProductsModelUpdated Men = new ProductsModelUpdated();
-            Men.Name = "Jacket Blue_dark";
-            Men.Price = 250;
-            Men.Catagory = CatagoryType.Men;
-            Men.Image = "https://bit.ly/3csfAjt";
-
-
-            _context.Products.Add(Men); // Add a product 
-            _context.SaveChanges(); // Save data in database
-            
-            var products2 = _context.Products.ToList(); // To get all products
-            products2.First().Name = "Jacket Blue Dark";
-            _context.SaveChanges(); // Update data in database
-
-            var products3 = _context.Products.ToList(); // To get all products
-            
-            _context.Products.Remove(Men);
-            _context.SaveChanges(); // Update data in database
-            
-            var products4 = _context.Products.ToList(); // To get all products
-
-            ///////////////////////////////////////////////////////////////////////////////////////////
             var products = _repo.GetProducts();
             return View(products);
         }
@@ -251,8 +222,7 @@ namespace DollarShop.Controllers
             NewProduct.Image     = item.Image;
             NewProduct.Price     = item.Price.Value;
             NewProduct.Catagory  = item.Catagory.Value;
-            NewProduct.ProductID = ProductRepository.GenerateID;
-            
+                        
             _repo.AddProducts(NewProduct);
             Data.IsSuccess  =   true;
             Data.Message    =   "Product Added !!!";

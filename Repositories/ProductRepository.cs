@@ -44,7 +44,8 @@ namespace DollarShop.Factories
 
         public void AddProducts(ProductsModelUpdated NewItem) 
         {
-             GenerateID++;
+            GenerateID++;
+            NewItem.ProductID = GenerateID;
             _products.Add(NewItem); 
         }
         

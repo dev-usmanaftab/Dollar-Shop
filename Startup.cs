@@ -2,6 +2,7 @@ using DollarShop.Controllers;
 using DollarShop.DB;
 using DollarShop.Factories;
 using DollarShop.Interfaces;
+using DollarShop.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DollarShop
@@ -28,11 +30,19 @@ namespace DollarShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-            services.AddSingleton<IProductRepository, ProductRepository>();
+            services
+                 .AddControllersWithViews()
+                 .AddJsonOptions(opts =>
+                 {
+                     var enumConverter = new JsonStringEnumConverter();
+                     opts.JsonSerializerOptions.Converters.Add(enumConverter);
+                 });
+ 
             services.AddDbContext<DollarShopContext>(
                 options => options.UseSqlServer(
                     Configuration.GetConnectionString("DollarShopConnectionString")));
+            
+            services.AddScoped<IProductRepository, ProductsFromDBRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
