@@ -5,11 +5,13 @@ using DollarShop.Models;
 using DollarShop.Models.DTOs.Product;
 using DollarShop.Models.Enums;
 using DollarShop.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,9 +20,11 @@ namespace DollarShop.Controllers
     public class ProductUpdatedController : Controller
     {
         IProductRepository _repo;
-        public ProductUpdatedController(IProductRepository repo)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public ProductUpdatedController(IProductRepository repo, IWebHostEnvironment hostEnvironment)
         {
             _repo = repo;
+            _hostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -89,58 +93,40 @@ namespace DollarShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditItem( EditRequestDTO item )
+        public IActionResult EditItem (EditRequestDTO item)
         {
-            EditResponseDTO Data = new EditResponseDTO();
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            string fileName = Path.GetFileNameWithoutExtension(item.ImageFile.FileName);
+            string extension = Path.GetExtension(item.ImageFile.FileName);
+            fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+            string path = Path.Combine(wwwRootPath + "\\Image\\", fileName);
 
-            if (String.IsNullOrWhiteSpace(item.Name))
+            using (var fileStream = new FileStream(path, FileMode.Create))
             {
-                Data.IsSuccess = false;
-                Data.Message = "Please Enter A Valid Product Name";
-                return Json(Data);
+                item.ImageFile.CopyTo(fileStream);
             }
 
-            if (String.IsNullOrWhiteSpace(item.Image))
-            {
-                Data.IsSuccess = false;
-                Data.Message = "Please Enter A Valid Image Link";
-                return Json(Data);
-            }
-
-            if (!item.Catagory.HasValue)
-            {
-                Data.IsSuccess = false;
-                Data.Message = "Please Enter A Valid Catagory Type";
-                return Json(Data);
-            }
-
-            if (!item.Price.HasValue)
-            {
-                Data.IsSuccess = false;
-                Data.Message = "Please Enter A Valid Price";
-                return Json(Data);
-            }
-
-            var product         = new ProductsModelUpdated();
-            product.Name        = item.Name;
-            product.Price       = item.Price.Value;
-            product.Image       = item.Image;
-            product.Catagory    = item.Catagory.Value;
-            product.ProductID   = item.ProductId.Value;
-
-            Data.IsSuccess = _repo.EditProduct(product);
+            var Product = new ProductsModelUpdated();
+            Product.Name = item.Name;
+            Product.Image = Path.Combine("\\Image\\", fileName);
+            Product.Price = item.Price.Value;
+            Product.Catagory = item.Catagory.Value;
+            Product.ProductID = item.ProductId.Value;
             
+            EditResponseDTO Data = new EditResponseDTO();
+            Data.IsSuccess = _repo.EditProduct(Product);
+            Data.Message = "Product Updated!!!";
+                        
             if (!Data.IsSuccess)
             {
-                Data.Message = "Product Not Exists";
-                return Json(Data);
+                Data.Message = "Edit Failed...";
             }
-            
-            Data.Message   = "Product Updated !!!";
+
             return Json(Data);
         }
 
         public IActionResult EditItemPage(int? id)
+        
         {
             if ( !id.HasValue )
             {
@@ -183,51 +169,32 @@ namespace DollarShop.Controllers
         { 
             return View();
         }
-
+        
         [HttpPost]
-        public IActionResult AddItem(AddRequestDTO item)
+        public async Task<IActionResult> Create (AddRequestDTO item)
         {
-            AddResponseDTO Data = new AddResponseDTO();
-
-            if ( String.IsNullOrWhiteSpace(item.Name) )
-                {
-                    Data.IsSuccess = false;
-                    Data.Message   = "Please Enter A Valid Product Name";
-                    return Json(Data);
-                }
-
-            if (String.IsNullOrWhiteSpace(item.Image) )
-                {
-                    Data.IsSuccess = false;
-                    Data.Message = "Please Enter A Valid Image Link";
-                    return Json(Data);
-                }
-            
-            if (!item.Catagory.HasValue)
-                {
-                    Data.IsSuccess = false;
-                    Data.Message = "Please Enter A Valid Catagory Type";
-                    return Json(Data);
-                }
-
-            if (!item.Price.HasValue)
+            if (ModelState.IsValid)
             {
-                Data.IsSuccess = false;
-                Data.Message = "Please Enter A Valid Price";
-                return Json(Data);
-            }
-            
-            var NewProduct = new ProductsModelUpdated();
-            NewProduct.Name      = item.Name;
-            NewProduct.Image     = item.Image;
-            NewProduct.Price     = item.Price.Value;
-            NewProduct.Catagory  = item.Catagory.Value;
-                        
-            _repo.AddProducts(NewProduct);
-            Data.IsSuccess  =   true;
-            Data.Message    =   "Product Added !!!";
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                string fileName = Path.GetFileNameWithoutExtension(item.ImageFile.FileName);
+                string extension = Path.GetExtension(item.ImageFile.FileName);
+                fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                string path = Path.Combine(wwwRootPath + "\\Image\\", fileName);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await item.ImageFile.CopyToAsync(fileStream);
+                }
 
-            return Json(Data);
+                var NewProduct = new ProductsModelUpdated();
+                NewProduct.Name = item.Name;
+                NewProduct.Image = Path.Combine("\\Image\\", fileName);
+                NewProduct.Price = item.Price.Value;
+                NewProduct.Catagory = item.Catagory.Value;
+
+                _repo.AddProducts(NewProduct);
+            }
+                
+            return RedirectToAction(nameof(ProductsFromJson));
         }
 
         public IActionResult Privacy()

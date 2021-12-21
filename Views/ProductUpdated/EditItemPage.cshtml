@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit Item";
 }
 
-<h1>Edit The Product Page </h1>
+<h1>Edit Product </h1>
 <br>
 
 @{
@@ -15,21 +15,26 @@
 
     if (@Model != null)
     {
-        <form action="https://www.google.com">
+        <form id="productEdit" action="https://www.google.com">
             <label for="name">Name</label><br>
-            <input type="text" id="name" name="name" value="@Model.Name"><br>
+            <input type="text" id="name" name="Name" value="@Model.Name"><br>
             <label for="price">Price</label><br>
-            <input type="text" id="price" name="price" value="@Model.Price"><br>
+            <input type="text" id="price" name="Price" value="@Model.Price"><br>
             <label for="Image">Image Link</label><br>
-            <input type="text" id="image" name="image" value="@Model.Image"><br>
+            <img src="@Model.Image"  width="400"/>
+            <input type="file" id="ImageFile" name="ImageFile" value="@Model.Image"><br>
             <label for="catagory">Choose A Catagory</label><br>
-            <select id="selectedCatagory" name="selectedCatagory" class="custom-select" asp-items="@Html.GetEnumSelectList<CatagoryType>()">
+            <select id="selectedCatagory" name="Catagory" class="custom-select" asp-items="@Html.GetEnumSelectList<CatagoryType>()">
             </select><br>
-            <input type="submit" value="Edit Item" id="btnEdit">
+            <input hidden type="text" value="@Model.ProductID" id="ProductID" name="ProductID" />
+            <input type="submit" value="Edit Item">
         </form>
     }
 
+<div>
     <p id="result"> </p>
+    <a href="ProductsFromJson">Back To Products</a>
+</div>        
 
 }
 
@@ -38,21 +43,24 @@
     <script>
         $(document).ready(function () {
             $('#selectedCatagory').prop('selectedIndex', @((int)Model.Catagory));
-            $("#btnEdit").click(function (event) {
+            $("#productEdit").submit(function (event) {
                 event.preventDefault();
-                var Data =
-                {
-                    Name:       $("#name").val(),
-                    Price:      $("#price").val(),
-                    Image:      $("#image").val(),
-                    Catagory:   $("#selectedCatagory").val(),
-                    ProductID:  "@Model.ProductID"
-                };
+
+                var formData = new FormData(this);
+                var image = $('#ImageFile').get(0).files[0];
+
+                formData.append('Name', $("#name").val());
+                formData.append('Price', $("#price").val());
+                formData.append('Catagory', $("#selectedCatagory").val());
+                formData.append('ImageFile', image);
+                formData.append('ProductID', "@Model.ProductID");
 
                 $.ajax({
                     url: "/ProductUpdated/EditItem",
                     type: "post",
-                    data: Data,
+                    data: formData,
+                    contentType: false,
+                    processData: false,
                     success: function (result) {
                         $("#result").html(`${result.message}`);
                     }

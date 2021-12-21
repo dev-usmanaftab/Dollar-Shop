@@ -11,11 +11,12 @@ namespace DollarShop.Models
 {
     public class ProductsModelUpdated
     {
+        [Key]
+        public int ProductID { get; set; }
         public string Name { get; set; }  
         public CatagoryType Catagory { get; set; }
         public string Image { get; set; }
         public int Price { get; set; }
-        [Key]
-        public int ProductID { get; set; }
+       
     }
 }

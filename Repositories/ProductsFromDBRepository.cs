@@ -46,7 +46,6 @@ namespace DollarShop.Repositories
             product.Price   = Item.Price;
             product.Catagory= Item.Catagory;
             
-            //_context.Update(product);
             _context.SaveChanges();
 
             return true;
@@ -56,7 +55,7 @@ namespace DollarShop.Repositories
         {
             _context.Database.EnsureCreated();
             _context.Products.Add(NewItem);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
         public List<ProductsModelUpdated> GetProducts()

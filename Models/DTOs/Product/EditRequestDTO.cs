@@ -1,4 +1,5 @@
 ﻿using DollarShop.Models.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace DollarShop.Models.DTOs.Product
 {
     public class EditRequestDTO
     {
-        public string Name { get; set; }
-        public int? Price { get; set; }
-        public string Image { get; set; }
-        public CatagoryType? Catagory { get; set; }
-        public int? ProductId { get; set; }
+        public int? ProductId {get; set;}
+        public string Name {get; set;}
+        public int? Price {get; set;}
+        public CatagoryType? Catagory {get; set;}
+        public IFormFile ImageFile {get; set;}
     }
 }
