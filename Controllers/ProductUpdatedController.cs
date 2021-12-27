@@ -173,28 +173,42 @@ namespace DollarShop.Controllers
         [HttpPost]
         public async Task<IActionResult> Create (AddRequestDTO item)
         {
-            if (ModelState.IsValid)
+            try
             {
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                string fileName = Path.GetFileNameWithoutExtension(item.ImageFile.FileName);
-                string extension = Path.GetExtension(item.ImageFile.FileName);
-                fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                string path = Path.Combine(wwwRootPath + "\\Image\\", fileName);
-                using (var fileStream = new FileStream(path, FileMode.Create))
+                if (ModelState.IsValid)
                 {
-                    await item.ImageFile.CopyToAsync(fileStream);
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string fileName = Path.GetFileNameWithoutExtension(item.ImageFile.FileName);
+                    string extension = Path.GetExtension(item.ImageFile.FileName);
+                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    string dir = Path.Combine(wwwRootPath,"Image");
+                    string path = Path.Combine(dir, fileName);
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await item.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    var NewProduct = new ProductsModelUpdated();
+                    NewProduct.Name = item.Name;
+                    NewProduct.Image = Path.Combine("\\Image\\", fileName);
+                    NewProduct.Price = item.Price.Value;
+                    NewProduct.Catagory = item.Catagory.Value;
+
+                    _repo.AddProducts(NewProduct);
                 }
 
-                var NewProduct = new ProductsModelUpdated();
-                NewProduct.Name = item.Name;
-                NewProduct.Image = Path.Combine("\\Image\\", fileName);
-                NewProduct.Price = item.Price.Value;
-                NewProduct.Catagory = item.Catagory.Value;
-
-                _repo.AddProducts(NewProduct);
+                return RedirectToAction(nameof(ProductsFromJson));
             }
-                
-            return RedirectToAction(nameof(ProductsFromJson));
+            catch (Exception ex)
+            {
+                System.IO.File.WriteAllText("logs.txt", ex.ToString());
+                return View("Error");
+            }
+            
         }
 
         public IActionResult Privacy()

@@ -55,7 +55,7 @@ namespace DollarShop.Repositories
         {
             _context.Database.EnsureCreated();
             _context.Products.Add(NewItem);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public List<ProductsModelUpdated> GetProducts()
