@@ -32,7 +32,7 @@ namespace DollarShop.Controllers
 
         public IActionResult Index()
         {
-            _logger.Log(LogLevel.Information, "Hello logs", null);
+            _logger.LogInformation("HomeController.Index method called!!!");
             return View();
         }
 

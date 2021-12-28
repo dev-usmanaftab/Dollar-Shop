@@ -21,15 +21,19 @@ namespace DollarShop.Controllers
     {
         IProductRepository _repo;
         private readonly IWebHostEnvironment _hostEnvironment;
-        public ProductUpdatedController(IProductRepository repo, IWebHostEnvironment hostEnvironment)
+        private readonly ILogger<ProductUpdatedController> _logger;
+
+        public ProductUpdatedController(IProductRepository repo, IWebHostEnvironment hostEnvironment, ILogger<ProductUpdatedController> logger)
         {
             _repo = repo;
+            _logger = logger;
             _hostEnvironment = hostEnvironment;
+
         }
 
         public IActionResult Index()
         {
-            
+            _logger.LogInformation("ProductUpdatedController.Index Method called!!!");
             return View();
         }
         
@@ -82,12 +86,14 @@ namespace DollarShop.Controllers
 
         public IActionResult Products()
         {
+            _logger.LogInformation("ProductUpdatedController.Products Method called!!!");
             var products = _repo.GetProducts();
             return View(products);
         }
 
         public IActionResult ProductsFromJson()
         {
+            _logger.LogInformation("ProductUpdatedController.ProductsFromJson Method called!!!");
             var products = _repo.GetProducts();
             return View(products);
         }
@@ -213,6 +219,7 @@ namespace DollarShop.Controllers
 
         public IActionResult Privacy()
         {
+            _logger.LogInformation("ProductUpdatedController.Privacy Method called!!!");
             return View();
         }
 

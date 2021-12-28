@@ -1,0 +1,15 @@
+2021-12-28 21:54:05.4336 Info Message Template Auto Format enabled
+2021-12-28 21:54:05.4932 Info Loading assembly: NLog.Web.AspNetCore
+2021-12-28 21:54:05.6744 Info Adding target FileTarget(Name=alldata)
+2021-12-28 21:54:05.8469 Info Adding target FileTarget(Name=otherFile-web)
+2021-12-28 21:54:06.0907 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\01 Practice\01 .NET Development\01 Web Apps Development\01 ASP.NET\DollarShop\bin\Debug\netcoreapp3.1\nlog.config
+2021-12-28 22:00:23.9837 Info Message Template Auto Format enabled
+2021-12-28 22:00:24.0408 Info Loading assembly: NLog.Web.AspNetCore
+2021-12-28 22:00:24.1818 Info Adding target FileTarget(Name=alldata)
+2021-12-28 22:00:24.2201 Info Adding target FileTarget(Name=otherFile-web)
+2021-12-28 22:00:24.3876 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\01 Practice\01 .NET Development\01 Web Apps Development\01 ASP.NET\DollarShop\bin\Debug\netcoreapp3.1\nlog.config
+2021-12-28 22:21:11.2962 Info Message Template Auto Format enabled
+2021-12-28 22:21:11.3531 Info Loading assembly: NLog.Web.AspNetCore
+2021-12-28 22:21:11.5226 Info Adding target FileTarget(Name=alldata)
+2021-12-28 22:21:11.5390 Info Adding target FileTarget(Name=otherFile-web)
+2021-12-28 22:21:11.6430 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\01 Practice\01 .NET Development\01 Web Apps Development\01 ASP.NET\DollarShop\bin\Debug\netcoreapp3.1\nlog.config
