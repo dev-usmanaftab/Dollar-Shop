@@ -2,22 +2,21 @@
     ViewData["Title"] = "The Dollor Shop";
 }
 
-<h1>jQuery Practice</h1>
 <h1>Sign In</h1>
 
-<form action="https://www.google.com/">
+<form id="myForm" action="/home/submitdemo">
     <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username" value=""><br>
+    <input type="text" id="username" name="username"><br>
 
     <label for="password">Password:</label><br>
-    <input type="text" id="password" name="password" value=""><br>
+    <input type="text" id="password" name="password"><br>
 
-    <label for="btnResponse" id="btnResponse" style="font-size:smaller"> </label><br>
+    <label for="response" id="response" style="font-size:smaller"> </label><br>
     <input id="btnSubmit" class="btnSubmit" type="submit" value="Login">
 </form>
 <br>
 
-<h1 id="first">This is H1 heading.......</h1>
+<h1 id="first">Click Me To Submit Form.......</h1>
 <h2>This is H2 heading.......</h2>
 <p id="html">Click Me to change my content........ </p>   
 <button id="append">Append Demo</button>
@@ -28,7 +27,7 @@
         $(document).ready(function () {
 
             $("#first").on("click", function () {
-                $("#first").hide();
+                $("#myForm").submit();
             });
 
             $("h2").on({
@@ -43,7 +42,42 @@
                 }
             });
 
-            $("#btnSubmit").click(function (event) {
+            $("#html").click(function () {
+                $("#html").html("Hurray, I Am Changed....!!!");
+            });
+
+            $("#append").click(function () {
+                var txt1 = "<p>I am created in Razor by using \"HTML Technique\" </p>";
+                var txt2 = $("<p></p>").text("I am created in Razor by using \"jQuery Technique\" ");
+                var txt3 = document.createElement("p");
+                txt3.innerHTML = "I am created in Razor by using \"DOM method\" ";
+                $("body").append(txt1, txt2, txt3);
+
+            });
+
+            $("#myForm").submit(function (ev) {
+                ev.preventDefault();
+                var actionURL = $("#myForm").attr("action");
+                var formData = $("#myForm").serialize();
+                $.ajax({
+                    url: actionURL,
+                    data: formData,
+                    success: function (data) {
+
+                        if (data == "success") {
+                            $("#response").css("color", "green");
+                            $("#response").html("Login Success!!!");
+                        }
+
+                        if (data == "failed") {
+                            $("#response").css("color", "red");
+                            $("#response").html("Login Failed...");
+                        }
+                    }
+                });
+            });
+
+    @*      $("#btnSubmit").click(function (event) {
                 event.preventDefault();
 
                 var mydata = {
@@ -57,30 +91,18 @@
                     success: function (result) {
 
                         if (result.isSuccess) {
-                            $("#btnResponse").css("color", "green");
-                            $("#btnResponse").html("Login Success!!!");
+                            $("#response").css("color", "green");
+                            $("#response").html("Login Success!!!");
                         }
 
                         if (!result.isSuccess) {
-                            $("#btnResponse").css("color", "red");
-                            $("#btnResponse").html("Login Failed...");
+                            $("#response").css("color", "red");
+                            $("#response").html("Login Failed...");
                         }
                     }
                 });
-            });
+            });         *@
 
-            $("#html").click(function () {
-                $("#html").html("Hurray, I Am Changed....!!!");
-            });
-
-            $("#append").click(function () {
-                var txt1 = "<p>I am created in Razor by using \"HTML Technique\" </p>";
-                var txt2 = $("<p></p>").text("I am created in Razor by using \"jQuery Technique\" ");
-                var txt3 = document.createElement("p");
-                txt3.innerHTML = "I am created in Razor by using \"DOM method\" ";
-                $("body").append(txt1, txt2, txt3);
-                
-            });
         });
     </script>
 }
@@ -113,6 +135,7 @@
                   var sum = a + b;
                   callback(sum);
               }
+              
               function a(msg) {
                   console.log("I am inside displayOnConsole method()")
                   console.log(msg);

@@ -36,6 +36,17 @@ namespace DollarShop.Controllers
             return View();
         }
 
+        public IActionResult SubmitDemo(RequestDTO data)
+        {  
+            
+            if (data.Username == "usman" && data.Password == "12345")
+            {
+                return Json("success");
+            }
+
+            return Json("failed");
+        }
+
         public IActionResult Products(string searchText="")
         {
             var products = new List<ProductsModelUpdated>();
